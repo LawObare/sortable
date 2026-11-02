@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VILLAIN DOSSIER // Classified Superhero Surveillance</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="villain-theme">
+  <!-- Top Secret Status Banner -->
+  <div class="top-banner">
+    <div class="top-banner-content">
+      <span class="status-dot"></span>
+      <span class="banner-code">SYNDICATE-SEC-LEVEL: REDACTED</span>
+      <span class="banner-divider">//</span>
+      <span class="banner-title">CONFIDENTIAL NEMESIS INTELLIGENCE TERMINAL</span>
+      <span class="banner-divider">//</span>
+      <span class="banner-timestamp">SYSTEM STATUS: ACTIVE SURVEILLANCE</span>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-branding">
+        <div class="branding-badge">CLASSIFIED ARCHIVE</div>
+        <h1 class="branding-title">VILLAIN DOSSIER</h1>
+        <p class="branding-tagline">Global Superhero Threat Assessment & Surveillance Database</p>
+      </div>
+
+      <div class="header-stats">
+        <div class="stat-pill">
+          <span class="pill-label">STATUS</span>
+          <span class="pill-value text-accent">LIVE FEED</span>
+        </div>
+        <div class="stat-pill">
+          <span class="pill-label">RECORD COUNT</span>
+          <span class="pill-value font-mono" id="resultsCounter">563 targets</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Controls Bar -->
+    <section class="controls-card" aria-label="Surveillance Controls">
+      <div class="controls-grid">
+        <!-- Live Search -->
+        <div class="control-group search-group">
+          <label for="searchInput" class="control-label">INTERCEPT TARGET (LIVE SEARCH)</label>
+          <div class="input-with-icon">
+            <span class="input-icon">🔍</span>
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="form-input search-input" 
+              placeholder="Search target name (e.g. 'man', 'bat')..." 
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button type="button" id="btnClearSearch" class="btn-clear" aria-label="Clear search input">✕</button>
+          </div>
+        </div>
+
+        <!-- Target Field Selector (Bonus) -->
+        <div class="control-group">
+          <label for="searchField" class="control-label">TARGET FIELD</label>
+          <select id="searchField" class="form-select">
+            <option value="name" selected>Name (Default)</option>
+            <option value="fullName">Full Name</option>
+            <option value="race">Race</option>
+            <option value="alignment">Alignment</option>
+            <option value="placeOfBirth">Place of Birth</option>
+            <option value="height">Height (cm)</option>
+            <option value="weight">Weight (kg)</option>
+            <option value="all">All Fields</option>
+          </select>
+        </div>
+
+        <!-- Filter Operator (Bonus) -->
+        <div class="control-group">
+          <label for="searchOperator" class="control-label">MATCH OPERATOR</label>
+          <select id="searchOperator" class="form-select">
+            <option value="include" selected>Includes</option>
+            <option value="exclude">Excludes</option>
+            <option value="gt">Greater Than (&gt;)</option>
+            <option value="lt">Less Than (&lt;)</option>
+            <option value="eq">Equals (=)</option>
+            <option value="neq">Not Equal (!=)</option>
+          </select>
+        </div>
+
+        <!-- Page Size Selector -->
+        <div class="control-group page-size-group">
+          <label for="pageSizeSelect" class="control-label">PAGE SIZE</label>
+          <select id="pageSizeSelect" class="form-select">
+            <option value="10">10 records</option>
+            <option value="20" selected>20 records</option>
+            <option value="50">50 records</option>
+            <option value="100">100 records</option>
+            <option value="all">All records</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading-state" style="display: none;">
+      <div class="radar-spinner"></div>
+      <p class="loading-text">DECRYPTING HERO INTELLIGENCE SATELLITE FEED...</p>
+    </div>
+
+    <!-- Error Alert Banner -->
+    <div id="errorMessage" class="error-banner" style="display: none;"></div>
+
+    <!-- Main Table Container -->
+    <main class="table-container">
+      <div class="table-scroll-wrapper">
+        <table class="dossier-table" id="heroesTable">
+          <thead>
+            <tr>
+              <th class="th-icon" scope="col">Icon</th>
+              <th class="th-sortable" data-sort="name" scope="col">
+                <div class="th-content">
+                  <span>Name</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable" data-sort="fullName" scope="col">
+                <div class="th-content">
+                  <span>Full Name</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <!-- Powerstats Columns -->
+              <th class="th-sortable th-stat" data-sort="intelligence" title="Intelligence (0-100)" scope="col">
+                <div class="th-content">
+                  <span>INT</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable th-stat" data-sort="strength" title="Strength (0-100)" scope="col">
+                <div class="th-content">
+                  <span>STR</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable th-stat" data-sort="speed" title="Speed (0-100)" scope="col">
+                <div class="th-content">
+                  <span>SPD</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable th-stat" data-sort="durability" title="Durability (0-100)" scope="col">
+                <div class="th-content">
+                  <span>DUR</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable th-stat" data-sort="power" title="Power (0-100)" scope="col">
+                <div class="th-content">
+                  <span>PWR</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable th-stat" data-sort="combat" title="Combat (0-100)" scope="col">
+                <div class="th-content">
+                  <span>CBT</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable" data-sort="race" scope="col">
+                <div class="th-content">
+                  <span>Race</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable" data-sort="gender" scope="col">
+                <div class="th-content">
+                  <span>Gender</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable" data-sort="height" scope="col">
+                <div class="th-content">
+                  <span>Height</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable" data-sort="weight" scope="col">
+                <div class="th-content">
+                  <span>Weight</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable" data-sort="placeOfBirth" scope="col">
+                <div class="th-content">
+                  <span>Place of Birth</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+              <th class="th-sortable" data-sort="alignment" scope="col">
+                <div class="th-content">
+                  <span>Alignment</span>
+                  <span class="sort-indicator">⇅</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="heroesTableBody">
+            <!-- Dynamically populated via table.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Toolbar -->
+      <footer class="pagination-bar" aria-label="Pagination Navigation">
+        <div class="pagination-info" id="pageInfo">Page 1 of 29</div>
+        <div class="pagination-nav">
+          <button type="button" id="btnFirst" class="btn-nav" aria-label="First page" title="First page">« First</button>
+          <button type="button" id="btnPrev" class="btn-nav" aria-label="Previous page" title="Previous page">‹ Prev</button>
+          <div id="pageNumbers" class="page-numbers-container"></div>
+          <button type="button" id="btnNext" class="btn-nav" aria-label="Next page" title="Next page">Next ›</button>
+          <button type="button" id="btnLast" class="btn-nav" aria-label="Last page" title="Last page">Last »</button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Hero Confidential Dossier Modal Container -->
+  <div id="dossierModal" class="dossier-modal"></div>
+
+  <!-- Entry Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
